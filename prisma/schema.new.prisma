@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  FREE
+  PREMIUM
+  ADMIN
+}
+
+enum ReportType {
+  FREE
+  PREMIUM
+}
+
+enum AnalysisStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(FREE)
+  credits       Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  reports       Report[]
+  analyses      Analysis[]
+  payments      Payment[]
+  subscriptions Subscription[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id          String      @id @default(cuid())
+  type        ReportType
+  userId      String
+  vinNumber   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  pdfUrl      String?
+  analyses    Analysis[]
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Analysis {
+  id              String         @id @default(cuid())
+  type            String         // paint, audio, vin
+  status          AnalysisStatus
+  data            String?        // JSON stringified analysis data
+  reportId        String
+  userId          String
+  createdAt       DateTime       @default(now())
+  completedAt     DateTime?
+  report          Report         @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  userId      String
+  amount      Float
+  currency    String   @default("TRY")
+  provider    String   // stripe, paytr
+  status      String   // success, pending, failed
+  credits     Int
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  userId      String
+  planId      String
+  startDate   DateTime @default(now())
+  endDate     DateTime
+  status      String   // active, cancelled, expired
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
