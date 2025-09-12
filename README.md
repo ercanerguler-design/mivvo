@@ -245,7 +245,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ## 👥 **Takım**
 
-- **[Ercan Erguler](https://github.com/ercanerguler-design)** - Lead Developer & Founder
+- Lead Developer & Founder
 - **AI Assistant** - Development Support & Documentation
 
 ## 📞 **İletişim & Destek**
