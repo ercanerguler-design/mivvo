@@ -53,18 +53,14 @@ export default async function handler(
       }
     });
 
-    // Ödeme geçmişini kaydet (opsiyonel)
-    await prisma.payment.create({
-      data: {
-        userId: user.id,
-        planId,
-        amount,
-        credits,
-        paymentMethod,
-        status: 'completed',
-        transactionId: mockPaymentResult.transactionId
-      }
-    });
+    // Ödeme geçmişini kaydet (şimdilik kapalı - schema senkron sorunu)
+    // await prisma.payment.create({
+    //   data: {
+    //     userId: user.id,
+    //     amount,
+    //     credits
+    //   }
+    // });
 
     return res.status(200).json({
       success: true,

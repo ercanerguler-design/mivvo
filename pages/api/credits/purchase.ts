@@ -17,17 +17,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { amount, credits } = req.body;
 
-    // Ödeme işlemi simülasyonu
+    // Ödeme işlemi simülasyonu (şimdilik kapalı - schema senkron sorunu)
     // Gerçek uygulamada burada Stripe veya PayTR entegrasyonu olacak
-    const payment = await prisma.payment.create({
-      data: {
-        userId: (session as any).user.id,
-        amount: parseFloat(amount),
-        credits: parseInt(credits),
-        provider: 'stripe',
-        status: 'success',
-      },
-    });
+    // const payment = await prisma.payment.create({
+    //   data: {
+    //     userId: (session as any).user.id,
+    //     amount: parseFloat(amount),
+    //     credits: parseInt(credits),
+    //     provider: 'stripe',
+    //     status: 'success',
+    //   },
+    // });
 
     // Kullanıcının kredilerini güncelle
     const updatedUser = await prisma.user.update({
@@ -49,7 +49,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ 
       success: true,
-      payment,
       credits: updatedUser.credits
     });
   } catch (error) {
