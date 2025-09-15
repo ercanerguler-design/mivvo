@@ -63,10 +63,10 @@ model VerificationToken {
 model Payment {
   id            String   @id @default(cuid())
   userId        String
-  planId        String
+  provider      String   @default("stripe")
   amount        Int
   credits       Int
-  paymentMethod String
+  paymentMethod String   @default("card")
   status        String   @default("pending") // pending, completed, failed
   transactionId String?
   createdAt     DateTime @default(now())
