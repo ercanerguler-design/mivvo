@@ -452,7 +452,7 @@ export default function Checkout() {
                           value={formData.expiryDate}
                           onChange={handleExpiryChange}
                           placeholder="MM/YY"
-                          maxLength="5"
+                                                    maxLength={5}
                           style={{
                             width: '100%',
                             padding: '12px 16px',
@@ -486,7 +486,7 @@ export default function Checkout() {
                           value={formData.cvv}
                           onChange={handleInputChange}
                           placeholder="123"
-                          maxLength="3"
+                                                    maxLength={3}
                           style={{
                             width: '100%',
                             padding: '12px 16px',
