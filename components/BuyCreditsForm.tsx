@@ -11,9 +11,10 @@ interface CreditPackage {
 
 interface BuyCreditsFormProps {
   onPackageSelect?: (pkg: CreditPackage) => void;
+  onSuccess?: () => void;
 }
 
-const BuyCreditsForm: React.FC<BuyCreditsFormProps> = ({ onPackageSelect }) => {
+const BuyCreditsForm: React.FC<BuyCreditsFormProps> = ({ onPackageSelect, onSuccess }) => {
   const [selectedPackage, setSelectedPackage] = useState<string>('');
 
   const packages: CreditPackage[] = [
@@ -30,6 +31,10 @@ const BuyCreditsForm: React.FC<BuyCreditsFormProps> = ({ onPackageSelect }) => {
       
       if (onPackageSelect) {
         onPackageSelect(pkg);
+      }
+      
+      if (onSuccess) {
+        onSuccess();
       }
     } catch (error) {
       console.error('Payment error:', error);
