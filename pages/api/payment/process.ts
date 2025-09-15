@@ -29,16 +29,16 @@ export default async function handler(
       planId,
       amount,
       paymentMethod,
-      userEmail: session.user.email
+      userEmail: (session as any).user.email
     });
 
     if (!mockPaymentResult.success) {
-      return res.status(400).json({ error: mockPaymentResult.error });
+      return res.status(400).json({ error: (mockPaymentResult as any).error });
     }
 
     // Kullanıcının kredilerini güncelle
     const user = await prisma.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: (session as any).user.email }
     });
 
     if (!user) {
@@ -47,7 +47,7 @@ export default async function handler(
 
     // Kredileri ekle
     await prisma.user.update({
-      where: { email: session.user.email },
+      where: { email: (session as any).user.email },
       data: {
         credits: user.credits + credits
       }

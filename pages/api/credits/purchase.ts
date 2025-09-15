@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Gerçek uygulamada burada Stripe veya PayTR entegrasyonu olacak
     const payment = await prisma.payment.create({
       data: {
-        userId: session.user.id,
+        userId: (session as any).user.id,
         amount: parseFloat(amount),
         credits: parseInt(credits),
         provider: 'stripe',
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Kullanıcının kredilerini güncelle
     const updatedUser = await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: (session as any).user.id },
       data: {
         credits: {
           increment: parseInt(credits)
@@ -40,10 +40,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // Premium seviyesi için kredi kontrolü
-    if (updatedUser.credits >= 100 && updatedUser.role === 'FREE') {
+    if (updatedUser.credits >= 100 && (updatedUser as any).role === 'FREE') {
       await prisma.user.update({
-        where: { id: session.user.id },
-        data: { role: 'PREMIUM' },
+        where: { id: (session as any).user.id },
+        data: { role: 'PREMIUM' } as any,
       });
     }
 
