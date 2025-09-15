@@ -421,6 +421,47 @@ export default function Home() {
           box-sizing: border-box;
         }
 
+        /* Mobile Zoom Prevention */
+        html {
+          -webkit-text-size-adjust: 100%;
+          -ms-text-size-adjust: 100%;
+          touch-action: manipulation;
+        }
+
+        body {
+          -webkit-tap-highlight-color: transparent;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          overflow-x: hidden;
+          max-width: 100vw;
+        }
+
+        /* Prevent zoom on input focus */
+        input, textarea, select {
+          font-size: 16px !important;
+          transform: scale(1);
+        }
+
+        /* Mobile Safari fixes */
+        @media screen and (max-width: 768px) {
+          body {
+            position: relative;
+            overflow-y: auto;
+            height: auto;
+            min-height: 100vh;
+            -webkit-overflow-scrolling: touch;
+          }
+          
+          input, textarea, select {
+            font-size: 16px !important;
+            transform: scale(1);
+            zoom: 1;
+          }
+        }
+
         /* Hero Section - Ultra Modern */
         .hero-section {
           position: relative;
@@ -429,6 +470,11 @@ export default function Home() {
           overflow: hidden;
           display: flex;
           align-items: center;
+          width: 100%;
+          max-width: 100vw;
+          overflow-x: hidden;
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
         }
 
         .hero-background {
@@ -491,6 +537,9 @@ export default function Home() {
           padding: 0 20px;
           position: relative;
           z-index: 2;
+          width: 100%;
+          max-width: 100vw;
+          overflow-x: hidden;
         }
 
         .hero-content {
@@ -1479,19 +1528,28 @@ export default function Home() {
           
           .hero-section {
             padding: 60px 0;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
           }
           
           .hero-title {
             font-size: 24px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .hero-subtitle {
             font-size: 14px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .btn-large {
             padding: 14px 20px;
             font-size: 14px;
+            touch-action: manipulation;
           }
           
           .hero-stats {
@@ -1501,51 +1559,82 @@ export default function Home() {
           
           .stat-number {
             font-size: 20px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .stat-label {
             font-size: 12px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .section-header h2 {
             font-size: 22px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .section-header p {
             font-size: 14px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .feature-card {
             padding: 20px 16px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
           }
           
           .feature-card h3 {
             font-size: 18px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .pricing-card {
             padding: 20px 16px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
           }
           
           .testimonial-card {
             padding: 24px 16px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
           }
           
           .testimonial-content p {
             font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .cta-text h2 {
             font-size: 24px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .cta-text p {
             font-size: 14px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
           
           .btn-xl {
             padding: 16px 24px;
             font-size: 16px;
+            touch-action: manipulation;
+          }
+          
+          /* Extra mobile zoom prevention */
+          * {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
           }
         }
       `}</style>
