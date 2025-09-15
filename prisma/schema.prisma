@@ -17,6 +17,7 @@ model User {
   hashedPassword String
   emailVerified DateTime?
   image         String?
+  role          String    @default("FREE") // FREE, PREMIUM
   credits       Int       @default(0)
   createdAt     DateTime  @default(now())
   accounts      Account[]
