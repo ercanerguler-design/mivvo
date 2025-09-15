@@ -1,11 +1,50 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import ReportButton from '../../components/ReportButton';
 
 export default function PaintAnalysis(){
+  const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [result, setResult] = useState<any[]|null>(null);
+  const [credits, setCredits] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
+
+  // Sayfa yüklendiğinde ve her render'da kredi kontrolü yap
+  useEffect(() => {
+    async function checkUserAndCredits() {
+      try {
+        const response = await fetch('/api/me');
+        const data = await response.json();
+        
+        // Kullanıcı girişi kontrolü
+        if (!data?.user) {
+          window.location.href = '/api/auth/signin?callbackUrl=/analysis/paint';
+          return;
+        }
+
+        // Kredi kontrolü
+        const userCredits = data.user.credits || 0;
+        setCredits(userCredits);
+        
+        if (userCredits <= 0) {
+          window.location.href = '/dashboard/credits?redirect=/analysis/paint';
+          return;
+        }
+      } catch (error) {
+        console.error('Kredi kontrolü sırasında hata:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    checkUserAndCredits();
+    
+    // Her 30 saniyede bir kredi kontrolü yap
+    const interval = setInterval(checkUserAndCredits, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(()=>{
     let stream: MediaStream | null = null;
@@ -28,9 +67,20 @@ export default function PaintAnalysis(){
     setResult([{ part:'Sol Ön Kapı', status:'şüpheli', confidence:0.78 }, { part:'Ön Kaput', status:'sağlam', confidence:0.92 }]);
   };
 
+  if (loading) {
+    return (
+      <main className="container" style={{padding:'24px'}}>
+        <div className="card">
+          <p>Kredi kontrolü yapılıyor...</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="container" style={{padding:'24px'}}>
       <h1>🖌️ Boya & Göçük Analizi</h1>
+      <div style={{marginBottom:12}}>Kalan Kredi: {credits}</div>
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginTop:12}}>
         <div className="card">
           <video ref={videoRef} playsInline muted style={{width:'100%',borderRadius:12}}/>

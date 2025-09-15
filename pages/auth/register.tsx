@@ -1,37 +1,54 @@
-import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
+import { toast } from 'react-hot-toast';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
+      const formData = new FormData(e.currentTarget);
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          surname: formData.get('surname'),
+          email: formData.get('email'),
+          password: formData.get('password'),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Bir hata oluştu');
+      }
+
+      // Kayıt başarılı, şimdi otomatik giriş yapalım
+      const result = await signIn('credentials', {
+        email: formData.get('email'),
+        password: formData.get('password'),
         redirect: false,
       });
 
       if (result?.error) {
-        setError(result.error);
-      } else {
-        router.push("/panel");
+        throw new Error('Giriş yapılamadı');
       }
+
+      toast.success('Kayıt başarılı! Yönlendiriliyorsunuz...');
+      router.push('/analysis');
     } catch (error) {
-      setError("Bir hata oluştu");
+      toast.error(error instanceof Error ? error.message : 'Bir hata oluştu');
     } finally {
       setLoading(false);
     }
@@ -53,15 +70,49 @@ export default function LoginPage() {
               />
             </div>
             <h2 className="text-4xl font-bold text-white mb-3 tracking-tight">
-              Hoş Geldiniz
+              Hesap Oluştur
             </h2>
             <p className="text-slate-400">
-              Mivvo hesabınıza giriş yapın
+              Mivvo'ya hoş geldiniz
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-slate-300 mb-1"
+                >
+                  Ad
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  className="block w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  placeholder="Adınız"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="surname"
+                  className="block text-sm font-medium text-slate-300 mb-1"
+                >
+                  Soyad
+                </label>
+                <input
+                  id="surname"
+                  name="surname"
+                  type="text"
+                  required
+                  className="block w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  placeholder="Soyadınız"
+                />
+              </div>
+
               <div>
                 <label
                   htmlFor="email"
@@ -93,15 +144,10 @@ export default function LoginPage() {
                   required
                   className="block w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   placeholder="••••••••"
+                  minLength={6}
                 />
               </div>
             </div>
-
-            {error && (
-              <div className="text-sm text-red-400 bg-red-900/50 border border-red-500/20 rounded-xl p-4">
-                {error}
-              </div>
-            )}
 
             <div>
               <button
@@ -115,28 +161,23 @@ export default function LoginPage() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Giriş yapılıyor...
+                    Hesap oluşturuluyor...
                   </div>
                 ) : (
-                  "Giriş Yap"
+                  "Hesap Oluştur"
                 )}
               </button>
             </div>
 
-            <div className="flex items-center justify-between text-sm">
+            <p className="text-center text-sm text-slate-400">
+              Zaten hesabınız var mı?{" "}
               <Link
-                href="/auth/forgot-password"
-                className="font-medium text-slate-300 hover:text-white transition-colors duration-200"
+                href="/auth/login"
+                className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
               >
-                Şifremi Unuttum
+                Giriş yapın
               </Link>
-              <Link
-                href="/auth/register"
-                className="font-medium text-slate-300 hover:text-white transition-colors duration-200"
-              >
-                Hesap Oluştur
-              </Link>
-            </div>
+            </p>
           </form>
 
           <div className="mt-8">
@@ -176,9 +217,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-export const getServerSideProps = async () => {
-  return {
-    props: {},
-  };
-};

@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -9,8 +9,8 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_ID!,
-      clientSecret: process.env.GOOGLE_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     CredentialsProvider({
       name: "credentials",
@@ -59,37 +59,11 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
     async session({ session, token }) {
       if (session.user) {
-        // Get fresh user data on each request
-        const user = await prisma.user.findUnique({
-          where: { id: token.id as string },
-          select: { 
-            id: true,
-            email: true,
-            name: true,
-            credits: true,
-            image: true
-          }
-        });
-        
-        if (user) {
-          session.user = {
-            ...session.user,
-            ...user
-          };
-        }
+        session.user.id = token.sub!;
       }
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
 };
-
-export default NextAuth(authOptions);

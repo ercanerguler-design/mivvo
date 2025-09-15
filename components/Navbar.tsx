@@ -25,7 +25,7 @@ export default function Navbar(){
         {session && (
           <>
             <Link href="/dashboard/credits" className="badge credits-badge">
-              {(session.user as any)?.credits || 0} Kredi
+              {session.user?.credits ?? 0} Kredi
             </Link>
           </>
         )}
@@ -37,10 +37,14 @@ export default function Navbar(){
             </button>
           </div>
         ) : (
-          <button className="btn btn-primary" onClick={()=>signIn("google", { callbackUrl: "/panel" })}>
-            <span>🔐</span>
-            Google ile Giriş
-          </button>
+          <div className="auth-buttons">
+            <Link href="/auth/register" className="btn btn-secondary">
+              Üye Ol
+            </Link>
+            <Link href="/auth/login" className="btn btn-primary">
+              Giriş Yap
+            </Link>
+          </div>
         )}
       </div>
       
