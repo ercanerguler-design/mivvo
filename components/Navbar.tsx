@@ -79,7 +79,7 @@ export default function Navbar(){
       <style jsx>{`
         .nav-menu {
           display: flex;
-          gap: 32px;
+          gap: 24px;
           align-items: center;
         }
         
@@ -88,6 +88,8 @@ export default function Navbar(){
           font-weight: 500;
           transition: color 0.2s ease;
           text-decoration: none;
+          font-size: 14px;
+          white-space: nowrap;
         }
         
         .nav-link:hover {
@@ -96,40 +98,53 @@ export default function Navbar(){
         
         .nav-actions {
           display: flex;
-          gap: 12px;
+          gap: 8px;
           align-items: center;
+          flex-shrink: 0;
         }
         
         .credits-badge {
           background: var(--primary);
           color: white;
+          font-size: 12px;
+          padding: 6px 12px;
         }
         
         .user-menu {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 8px;
         }
         
         .user-name {
-          font-size: 14px;
+          font-size: 13px;
           color: var(--muted);
+          white-space: nowrap;
+        }
+        
+        .auth-buttons {
+          display: flex;
+          gap: 8px;
+          align-items: center;
         }
         
         .mobile-menu-toggle {
           display: none;
           flex-direction: column;
-          gap: 4px;
+          gap: 3px;
           background: none;
           border: none;
           cursor: pointer;
+          padding: 4px;
+          margin-left: 8px;
         }
         
         .mobile-menu-toggle span {
-          width: 25px;
+          width: 20px;
           height: 2px;
           background: var(--ink);
           transition: all 0.3s ease;
+          border-radius: 1px;
         }
         
         .mobile-menu {
@@ -143,7 +158,8 @@ export default function Navbar(){
           box-shadow: var(--shadow-lg);
           padding: 16px;
           flex-direction: column;
-          gap: 12px;
+          gap: 8px;
+          z-index: 1000;
         }
         
         .mobile-nav-link {
@@ -155,13 +171,24 @@ export default function Navbar(){
           background: none;
           border: none;
           text-align: left;
-          font-size: 16px;
+          font-size: 15px;
           width: 100%;
           cursor: pointer;
+          font-weight: 500;
         }
         
         .mobile-nav-link:hover {
           background: #f8fafc;
+        }
+        
+        @media (max-width: 1024px) {
+          .nav-menu {
+            gap: 20px;
+          }
+          
+          .nav-link {
+            font-size: 13px;
+          }
         }
         
         @media (max-width: 768px) {
@@ -176,6 +203,17 @@ export default function Navbar(){
           
           .mobile-menu {
             display: flex;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .mobile-menu {
+            padding: 12px;
+          }
+          
+          .mobile-nav-link {
+            padding: 10px 12px;
+            font-size: 14px;
           }
         }
       `}</style>

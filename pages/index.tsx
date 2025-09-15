@@ -1351,6 +1351,20 @@ export default function Home() {
         }
 
         /* Responsive Design */
+        @media (max-width: 1200px) {
+          .container {
+            padding: 0 24px;
+          }
+          
+          .hero-content {
+            gap: 50px;
+          }
+          
+          .hero-title {
+            font-size: 48px;
+          }
+        }
+
         @media (max-width: 1024px) {
           .hero-content {
             grid-template-columns: 1fr;
@@ -1369,17 +1383,31 @@ export default function Home() {
           .cta-content {
             grid-template-columns: 1fr;
             text-align: center;
+            gap: 40px;
           }
           
           .footer-content {
             grid-template-columns: 1fr;
             gap: 40px;
           }
+          
+          .features-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          }
         }
 
         @media (max-width: 768px) {
+          .container {
+            padding: 0 16px;
+          }
+          
+          .hero-section {
+            padding: 80px 0;
+          }
+          
           .hero-title {
             font-size: 32px;
+            line-height: 1.2;
           }
           
           .hero-subtitle {
@@ -1389,6 +1417,7 @@ export default function Home() {
           .hero-actions {
             flex-direction: column;
             align-items: center;
+            gap: 16px;
           }
           
           .hero-stats {
@@ -1397,15 +1426,25 @@ export default function Home() {
           }
           
           .section-header h2 {
-            font-size: 32px;
+            font-size: 28px;
+          }
+          
+          .section-header p {
+            font-size: 16px;
           }
           
           .features-grid {
             grid-template-columns: 1fr;
+            gap: 24px;
+          }
+          
+          .feature-card {
+            padding: 24px 20px;
           }
           
           .pricing-grid {
             grid-template-columns: 1fr;
+            gap: 24px;
           }
           
           .pricing-card.popular {
@@ -1414,6 +1453,7 @@ export default function Home() {
           
           .cta-benefits {
             flex-direction: column;
+            gap: 12px;
           }
           
           .footer-links {
@@ -1426,9 +1466,17 @@ export default function Home() {
             gap: 16px;
             text-align: center;
           }
+          
+          .testimonial-card {
+            padding: 32px 20px;
+          }
         }
 
         @media (max-width: 480px) {
+          .container {
+            padding: 0 12px;
+          }
+          
           .hero-section {
             padding: 60px 0;
           }
@@ -1437,34 +1485,67 @@ export default function Home() {
             font-size: 24px;
           }
           
-          .btn-large {
-            padding: 16px 24px;
+          .hero-subtitle {
             font-size: 14px;
           }
           
+          .btn-large {
+            padding: 14px 20px;
+            font-size: 14px;
+          }
+          
+          .hero-stats {
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+          
           .stat-number {
-            font-size: 24px;
+            font-size: 20px;
+          }
+          
+          .stat-label {
+            font-size: 12px;
           }
           
           .section-header h2 {
-            font-size: 24px;
+            font-size: 22px;
           }
           
-          .feature-card,
-          .pricing-card {
-            padding: 24px 20px;
+          .section-header p {
+            font-size: 14px;
           }
           
-          .testimonial-card {
-            padding: 32px 20px;
+          .feature-card {
+            padding: 20px 16px;
           }
           
-          .testimonial-content p {
+          .feature-card h3 {
             font-size: 18px;
           }
           
+          .pricing-card {
+            padding: 20px 16px;
+          }
+          
+          .testimonial-card {
+            padding: 24px 16px;
+          }
+          
+          .testimonial-content p {
+            font-size: 16px;
+          }
+          
           .cta-text h2 {
-            font-size: 28px;
+            font-size: 24px;
+          }
+          
+          .cta-text p {
+            font-size: 14px;
+          }
+          
+          .btn-xl {
+            padding: 16px 24px;
+            font-size: 16px;
           }
         }
       `}</style>
