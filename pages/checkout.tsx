@@ -380,7 +380,7 @@ export default function Checkout() {
                         value={formData.cardNumber}
                         onChange={handleCardNumberChange}
                         placeholder="1234 5678 9012 3456"
-                        maxLength="19"
+                        maxLength={19}
                         style={{
                           width: '100%',
                           padding: '12px 16px',
