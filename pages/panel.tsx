@@ -59,7 +59,7 @@ export default function Panel() {
           <div className="dashboard-header">
             <div className="welcome-section">
               <div className="user-avatar">
-                <img src={user?.image || '/default-avatar.png'} alt={user?.name} />
+                <img src={user?.image || '/default-avatar.svg'} alt={user?.name} />
               </div>
               <div className="welcome-text">
                 <h1>Hoş Geldin, {user?.name?.split(' ')[0] || 'Kullanıcı'}! 👋</h1>
@@ -333,7 +333,7 @@ export default function Panel() {
                     <h2>Profil Bilgileri</h2>
                     <div className="profile-card">
                       <div className="profile-avatar">
-                        <img src={user?.image || '/default-avatar.png'} alt={user?.name} />
+                        <img src={user?.image || '/default-avatar.svg'} alt={user?.name} />
                       </div>
                       <div className="profile-details">
                         <div className="detail-item">

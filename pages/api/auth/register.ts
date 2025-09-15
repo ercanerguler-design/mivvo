@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '../../../lib/prisma';
 import bcrypt from 'bcryptjs';
 
 export default async function handler(
@@ -11,9 +11,9 @@ export default async function handler(
   }
 
   try {
-    const { name, surname, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!name || !surname || !email || !password) {
+    if (!name || !email || !password) {
       return res.status(400).json({ error: 'Tüm alanlar zorunludur' });
     }
 
@@ -44,7 +44,7 @@ export default async function handler(
     const user = await prisma.user.create({
       data: {
         name,
-        surname,
+        surname: '', // Boş string olarak ayarla
         email,
         hashedPassword,
         emailVerified: new Date(), // Direkt olarak doğrulanmış olarak işaretle

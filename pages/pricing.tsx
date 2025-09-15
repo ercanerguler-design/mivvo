@@ -201,7 +201,7 @@ export default function Pricing() {
                       {plan.buttonText}
                     </Link>
                   ) : (
-                    <Link href="/panel" className={`btn ${plan.popular ? 'btn-primary' : 'btn-secondary'} btn-full`}>
+                    <Link href={`/checkout?plan=${plan.name.toLowerCase()}`} className={`btn ${plan.popular ? 'btn-primary' : 'btn-secondary'} btn-full`}>
                       {plan.buttonText}
                     </Link>
                   )}

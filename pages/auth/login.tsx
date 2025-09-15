@@ -1,184 +1,346 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [form, setForm] = useState({ 
+    email: "", 
+    password: "" 
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
 
     try {
       const result = await signIn("credentials", {
-        email,
-        password,
+        email: form.email.trim(),
+        password: form.password,
         redirect: false,
       });
 
       if (result?.error) {
-        setError(result.error);
+        toast.error(result.error);
       } else {
+        toast.success('Giriş başarılı!');
         router.push("/panel");
       }
     } catch (error) {
-      setError("Bir hata oluştu");
+      toast.error("Bir hata oluştu");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-      <div className="w-full max-w-md p-6">
-        <div className="bg-white/10 backdrop-blur-lg px-8 py-10 rounded-3xl shadow-2xl border border-white/20">
-          <div className="mb-10 text-center">
-            <div className="w-32 h-32 mx-auto mb-8 relative">
-              <div className="absolute inset-0 bg-blue-500 rounded-full blur-2xl opacity-20"></div>
-              <Image
-                src="/sample-report-bg.png"
-                alt="Mivvo Logo"
-                width={128}
-                height={128}
-                className="relative rounded-full border-4 border-white/20"
-              />
-            </div>
-            <h2 className="text-4xl font-bold text-white mb-3 tracking-tight">
-              Hoş Geldiniz
-            </h2>
-            <p className="text-slate-400">
-              Mivvo hesabınıza giriş yapın
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px'
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '1000px',
+        background: 'white',
+        borderRadius: '20px',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+        overflow: 'hidden',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        minHeight: '600px'
+      }}>
+        
+        {/* Sol Panel */}
+        <div style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          padding: '60px 40px',
+          color: 'white',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}>
+          <div style={{ marginBottom: '40px' }}>
+            <h1 style={{
+              fontSize: '36px',
+              fontWeight: 'bold',
+              marginBottom: '16px',
+              margin: 0
+            }}>Mivvo</h1>
+            <p style={{
+              fontSize: '18px',
+              opacity: 0.9,
+              lineHeight: '1.6',
+              margin: 0
+            }}>
+              Yapay zeka destekli araç ekspertizleri ile güvenli alışveriş yapın
             </p>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                background: 'rgba(255,255,255,0.2)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px'
+              }}>🔍</div>
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-slate-300 mb-1"
-                >
-                  E-posta Adresi
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="block w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="ornek@email.com"
-                />
+                <h3 style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 4px 0' }}>VIN Analizi</h3>
+                <p style={{ fontSize: '14px', opacity: 0.8, margin: 0 }}>Detaylı araç geçmişi ve teknik bilgiler</p>
               </div>
-
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                background: 'rgba(255,255,255,0.2)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px'
+              }}>🎨</div>
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-slate-300 mb-1"
-                >
-                  Şifre
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  className="block w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="••••••••"
-                />
+                <h3 style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 4px 0' }}>Boya Kontrolü</h3>
+                <p style={{ fontSize: '14px', opacity: 0.8, margin: 0 }}>Gelişmiş görüntü işleme teknolojisi</p>
               </div>
             </div>
-
-            {error && (
-              <div className="text-sm text-red-400 bg-red-900/50 border border-red-500/20 rounded-xl p-4">
-                {error}
-              </div>
-            )}
-
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex justify-center py-3.5 px-4 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-blue-500/25"
-              >
-                {loading ? (
-                  <div className="flex items-center gap-2">
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Giriş yapılıyor...
-                  </div>
-                ) : (
-                  "Giriş Yap"
-                )}
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <Link
-                href="/auth/forgot-password"
-                className="font-medium text-slate-300 hover:text-white transition-colors duration-200"
-              >
-                Şifremi Unuttum
-              </Link>
-              <Link
-                href="/auth/register"
-                className="font-medium text-slate-300 hover:text-white transition-colors duration-200"
-              >
-                Hesap Oluştur
-              </Link>
-            </div>
-          </form>
-
-          <div className="mt-8">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-transparent text-slate-400">
-                  veya
-                </span>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                background: 'rgba(255,255,255,0.2)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px'
+              }}>🔊</div>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 4px 0' }}>Motor Analizi</h3>
+                <p style={{ fontSize: '14px', opacity: 0.8, margin: 0 }}>Akustik analizler ile hata tespiti</p>
               </div>
             </div>
-
-            <button
-              type="button"
-              onClick={() => signIn("google", { callbackUrl: "/panel" })}
-              className="mt-4 w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all duration-200"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-              </svg>
-              Google ile devam et
-            </button>
           </div>
         </div>
 
-        <footer className="mt-8 text-center text-sm text-slate-400">
-          <p>
-            © {new Date().getFullYear()} Mivvo. Tüm hakları saklıdır.
-          </p>
-        </footer>
+        {/* Sağ Panel */}
+        <div style={{
+          padding: '60px 40px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}>
+          <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+            <h2 style={{
+              fontSize: '28px',
+              fontWeight: 'bold',
+              color: '#1f2937',
+              margin: '0 0 8px 0'
+            }}>Hoş Geldiniz</h2>
+            <p style={{
+              color: '#6b7280',
+              fontSize: '16px',
+              margin: 0
+            }}>Hesabınıza giriş yapın</p>
+          </div>
+
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            
+            {/* E-posta */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>E-posta Adresi</label>
+              <input
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={onChange}
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s',
+                  boxSizing: 'border-box'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                placeholder="ornek@email.com"
+              />
+            </div>
+
+            {/* Şifre */}
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>Şifre</label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={onChange}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '12px 50px 12px 16px',
+                    border: '2px solid #e5e7eb',
+                    borderRadius: '12px',
+                    fontSize: '16px',
+                    outline: 'none',
+                    transition: 'border-color 0.2s',
+                    boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    color: '#6b7280'
+                  }}
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+            </div>
+
+            {/* Giriş Butonu */}
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: loading ? '#9ca3af' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s',
+                marginTop: '8px'
+              }}
+            >
+              {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
+            </button>
+
+            {/* Kayıt Linki */}
+            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+              <p style={{ fontSize: '14px', color: '#6b7280', margin: 0 }}>
+                Hesabınız yok mu?{' '}
+                <Link href="/auth/register" style={{
+                  color: '#667eea',
+                  fontWeight: '600',
+                  textDecoration: 'none'
+                }}>
+                  Hesap oluşturun
+                </Link>
+              </p>
+            </div>
+
+            {/* Sosyal Medya */}
+            <div style={{ marginTop: '24px' }}>
+              <div style={{
+                position: 'relative',
+                textAlign: 'center',
+                marginBottom: '20px'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: 0,
+                  right: 0,
+                  height: '1px',
+                  background: '#e5e7eb'
+                }}></div>
+                <span style={{
+                  background: 'white',
+                  padding: '0 16px',
+                  color: '#6b7280',
+                  fontSize: '14px'
+                }}>veya</span>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <button
+                  type="button"
+                  onClick={() => signIn('google', { callbackUrl: '/panel' })}
+                  style={{
+                    padding: '12px 24px',
+                    border: '2px solid #e5e7eb',
+                    borderRadius: '12px',
+                    background: 'white',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#374151',
+                    transition: 'all 0.2s',
+                    minWidth: '200px'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.borderColor = '#d1d5db';
+                    e.currentTarget.style.background = '#f9fafb';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.borderColor = '#e5e7eb';
+                    e.currentTarget.style.background = 'white';
+                  }}
+                >
+                  <span style={{ fontSize: '18px' }}>G</span>
+                  Google ile devam et
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
 }
-
-export const getServerSideProps = async () => {
-  return {
-    props: {},
-  };
-};

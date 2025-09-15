@@ -363,36 +363,42 @@ export default function Home() {
           <div className="footer-content">
             <div className="footer-brand">
               <h3>Mivvo AI</h3>
-              <p>Türkiye'nin lider AI destekli araç analizi platformu</p>
-              <div className="social-links">
-                <a href="#" aria-label="LinkedIn">💼</a>
-                <a href="#" aria-label="Twitter">🐦</a>
-                <a href="#" aria-label="Instagram">📸</a>
-                <a href="#" aria-label="YouTube">🎥</a>
+              <p className="footer-brand-desc">Türkiye'nin lider AI destekli araç analizi platformu</p>
+              <div className="social-links" aria-hidden="false">
+                <a href="#" aria-label="LinkedIn" className="social-link">💼</a>
+                <a href="#" aria-label="Twitter" className="social-link">🐦</a>
+                <a href="#" aria-label="Instagram" className="social-link">📸</a>
+                <a href="#" aria-label="YouTube" className="social-link">🎥</a>
               </div>
             </div>
             
             <div className="footer-links">
               <div className="footer-group">
                 <h4>Hizmetler</h4>
-                <Link href="/analysis/vin">VIN Analizi</Link>
-                <Link href="/analysis/paint">Boya Kontrolü</Link>
-                <Link href="/analysis/audio">Motor Sesi</Link>
-                <Link href="/services">Tüm Hizmetler</Link>
+                <nav aria-label="Hizmetler">
+                  <Link href="/analysis/vin">VIN Analizi</Link>
+                  <Link href="/analysis/paint">Boya Kontrolü</Link>
+                  <Link href="/analysis/audio">Motor Sesi</Link>
+                  <Link href="/services">Tüm Hizmetler</Link>
+                </nav>
               </div>
               <div className="footer-group">
                 <h4>Şirket</h4>
-                <Link href="/about">Hakkımızda</Link>
-                <Link href="/pricing">Fiyatlandırma</Link>
-                <Link href="/faq">SSS</Link>
-                <Link href="/contact">İletişim</Link>
+                <nav aria-label="Şirket">
+                  <Link href="/about">Hakkımızda</Link>
+                  <Link href="/pricing">Fiyatlandırma</Link>
+                  <Link href="/faq">SSS</Link>
+                  <Link href="/contact">İletişim</Link>
+                </nav>
               </div>
               <div className="footer-group">
                 <h4>Yasal</h4>
-                <Link href="/legal/terms">Kullanım Şartları</Link>
-                <Link href="/legal/privacy">Gizlilik Politikası</Link>
-                <Link href="/legal/terms">KVKK</Link>
-                <Link href="/contact">Destek</Link>
+                <nav aria-label="Yasal">
+                  <Link href="/legal/terms">Kullanım Şartları</Link>
+                  <Link href="/legal/privacy">Gizlilik Politikası</Link>
+                  <Link href="/legal/terms">KVKK</Link>
+                  <Link href="/contact">Destek</Link>
+                </nav>
               </div>
             </div>
           </div>
@@ -1256,8 +1262,14 @@ export default function Home() {
 
         .footer-brand p {
           color: rgba(255, 255, 255, 0.8);
-          margin-bottom: 24px;
+          margin-bottom: 12px;
           line-height: 1.6;
+        }
+
+        .footer-brand-desc {
+          margin-bottom: 18px;
+          color: rgba(255,255,255,0.85);
+          max-width: 380px;
         }
 
         .social-links {
@@ -1266,7 +1278,7 @@ export default function Home() {
         }
 
         .social-links a {
-          display: flex;
+          display: inline-flex;
           align-items: center;
           justify-content: center;
           width: 48px;
@@ -1275,6 +1287,7 @@ export default function Home() {
           border-radius: 12px;
           font-size: 20px;
           transition: all 0.3s ease;
+          margin-right: 8px;
         }
 
         .social-links a:hover {
@@ -1295,12 +1308,19 @@ export default function Home() {
           color: #FFD700;
         }
 
+        .footer-group nav {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
         .footer-group a {
           display: block;
-          color: rgba(255, 255, 255, 0.8);
+          color: rgba(255, 255, 255, 0.9);
           text-decoration: none;
           padding: 8px 0;
-          transition: all 0.3s ease;
+          margin: 6px 0;
+          transition: all 0.18s ease;
           font-size: 14px;
         }
 
