@@ -3,97 +3,105 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id             String         @id @default(cuid())
-  name           String
-  surname        String
-  email          String         @unique
-  hashedPassword String
-  emailVerified  DateTime?
-  image          String?
-  credits        Int            @default(0)
-  createdAt      DateTime       @default(now())
-  role           String         @default("FREE")
-  accounts       Account[]
-  payments       Payment[]
-  reports        Report[]
-  reportAccess   ReportAccess[]
-  sessions       Session[]
-}
-
-model Account {
-  id                String  @id @default(cuid())
+model account {
+  id                String  @id
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              user    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Account_userId_fkey")
 
-  @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId], map: "Account_provider_providerAccountId_key")
+  @@index([userId], map: "Account_userId_fkey")
+  @@index([userId], map: "idx_account_user_id")
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
-model Payment {
-  id            String   @id @default(cuid())
+model payment {
+  id            String   @id
   userId        String
   amount        Int
   credits       Int
-  paymentMethod String   @default("card")
+  createdAt     DateTime @default(now())
+  paymentMethod String
+  planId        String
   status        String   @default("pending")
   transactionId String?
-  createdAt     DateTime @default(now())
-  provider      String   @default("stripe")
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Payment_userId_fkey")
+
+  @@index([userId], map: "Payment_userId_fkey")
+  @@index([userId], map: "idx_payment_user_id")
 }
 
-model Report {
-  id        String         @id @default(cuid())
-  userId    String
-  type      String
-  vin       String
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  data      String
-  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  access    ReportAccess[]
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model report {
+  id           String         @id
+  userId       String
+  type         String
+  vin          String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  data         String         @db.LongText
+  user         user           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Report_userId_fkey")
+  reportaccess reportaccess[]
+
+  @@index([userId], map: "Report_userId_fkey")
+  @@index([userId], map: "idx_report_user_id")
 }
 
-model ReportAccess {
-  id          String    @id @default(cuid())
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model reportaccess {
+  id          String    @id
   userId      String
   reportId    String
   type        String
   purchasedAt DateTime  @default(now())
   expiresAt   DateTime?
   credits     Int       @default(0)
-  report      Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  report      report    @relation(fields: [reportId], references: [id], onDelete: Cascade, map: "ReportAccess_reportId_fkey")
+  user        user      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "ReportAccess_userId_fkey")
 
-  @@unique([userId, reportId])
+  @@unique([userId, reportId], map: "ReportAccess_userId_reportId_key")
+  @@index([reportId], map: "ReportAccess_reportId_fkey")
+  @@index([userId], map: "ReportAccess_userId_fkey")
+  @@index([reportId], map: "idx_report_access_report_id")
+  @@index([userId], map: "idx_report_access_user_id")
+}
+
+model session {
+  id           String   @id
+  sessionToken String   @unique(map: "Session_sessionToken_key")
+  userId       String
+  expires      DateTime
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Session_userId_fkey")
+
+  @@index([userId], map: "Session_userId_fkey")
+  @@index([userId], map: "idx_session_user_id")
+}
+
+model user {
+  id             String         @id
+  name           String
+  email          String         @unique(map: "User_email_key")
+  emailVerified  DateTime?
+  image          String?
+  credits        Int            @default(0)
+  createdAt      DateTime       @default(now())
+  hashedPassword String
+  surname        String
+  account        account[]
+  payment        payment[]
+  report         report[]
+  reportaccess   reportaccess[]
+  session        session[]
 }
