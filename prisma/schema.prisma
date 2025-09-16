@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -20,11 +20,10 @@ model account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  user              user    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Account_userId_fkey")
+  user              user    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "account_user_fkey")
 
-  @@unique([provider, providerAccountId], map: "Account_provider_providerAccountId_key")
-  @@index([userId], map: "Account_userId_fkey")
-  @@index([userId], map: "idx_account_user_id")
+  @@unique([provider, providerAccountId], map: "account_provider_key")
+  @@index([userId], map: "account_userId_idx")
 }
 
 model payment {
@@ -38,10 +37,9 @@ model payment {
   status        String   @default("pending")
   transactionId String?
   provider      String   @default("demo")
-  user          user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Payment_userId_fkey")
+  user          user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "payment_user_fkey")
 
-  @@index([userId], map: "Payment_userId_fkey")
-  @@index([userId], map: "idx_payment_user_id")
+  @@index([userId], map: "payment_userId_idx")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -52,12 +50,11 @@ model report {
   vin          String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime
-  data         String         @db.LongText
-  user         user           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Report_userId_fkey")
+  data         String         @db.Text
+  user         user           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "report_user_fkey")
   reportaccess reportaccess[]
 
-  @@index([userId], map: "Report_userId_fkey")
-  @@index([userId], map: "idx_report_user_id")
+  @@index([userId], map: "report_userId_idx")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -69,14 +66,12 @@ model reportaccess {
   purchasedAt DateTime  @default(now())
   expiresAt   DateTime?
   credits     Int       @default(0)
-  report      report    @relation(fields: [reportId], references: [id], onDelete: Cascade, map: "ReportAccess_reportId_fkey")
-  user        user      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "ReportAccess_userId_fkey")
+  report      report    @relation(fields: [reportId], references: [id], onDelete: Cascade, map: "reportaccess_report_fkey")
+  user        user      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "reportaccess_user_fkey")
 
-  @@unique([userId, reportId], map: "ReportAccess_userId_reportId_key")
-  @@index([reportId], map: "ReportAccess_reportId_fkey")
-  @@index([userId], map: "ReportAccess_userId_fkey")
-  @@index([reportId], map: "idx_report_access_report_id")
-  @@index([userId], map: "idx_report_access_user_id")
+  @@unique([userId, reportId], map: "reportaccess_user_report_key")
+  @@index([reportId], map: "reportaccess_reportId_idx")
+  @@index([userId], map: "reportaccess_userId_idx")
 }
 
 model session {
@@ -84,10 +79,9 @@ model session {
   sessionToken String   @unique(map: "Session_sessionToken_key")
   userId       String
   expires      DateTime
-  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Session_userId_fkey")
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "session_user_fkey")
 
-  @@index([userId], map: "Session_userId_fkey")
-  @@index([userId], map: "idx_session_user_id")
+  @@index([userId], map: "session_userId_idx")
 }
 
 model user {
