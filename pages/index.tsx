@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar";
+import AuthLink from "../components/AuthLink";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -376,9 +377,9 @@ export default function Home() {
               <div className="footer-group">
                 <h4>Hizmetler</h4>
                 <nav aria-label="Hizmetler">
-                  <Link href="/analysis/vin">VIN Analizi</Link>
-                  <Link href="/analysis/paint">Boya Kontrolü</Link>
-                  <Link href="/analysis/audio">Motor Sesi</Link>
+                  <AuthLink href="/analysis/vin">VIN Analizi</AuthLink>
+                  <AuthLink href="/analysis/paint">Boya Kontrolü</AuthLink>
+                  <AuthLink href="/analysis/audio">Motor Sesi</AuthLink>
                   <Link href="/services">Tüm Hizmetler</Link>
                 </nav>
               </div>
@@ -459,6 +460,118 @@ export default function Home() {
             font-size: 16px !important;
             transform: scale(1);
             zoom: 1;
+          }
+
+          /* Hero section mobile improvements */
+          .hero-section {
+            padding: 40px 0;
+            min-height: 90vh;
+          }
+
+          .hero-content {
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: center;
+            padding: 20px 0;
+          }
+
+          .hero-title {
+            font-size: 28px;
+            line-height: 1.3;
+            margin-bottom: 20px;
+          }
+
+          .hero-subtitle {
+            font-size: 16px;
+            margin-bottom: 30px;
+          }
+
+          .hero-actions {
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+          }
+
+          .btn-large {
+            width: 100%;
+            max-width: 280px;
+            padding: 16px 24px;
+            font-size: 16px;
+          }
+
+          .hero-stats {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+          }
+
+          .stat-number {
+            font-size: 24px;
+          }
+
+          .stat-label {
+            font-size: 12px;
+          }
+
+          /* Features mobile improvements */
+          .features-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+          }
+
+          .feature-card {
+            padding: 24px 20px;
+          }
+
+          .feature-card h3 {
+            font-size: 20px;
+          }
+
+          /* Pricing mobile improvements */
+          .pricing-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+          }
+
+          .pricing-card.popular {
+            transform: none;
+          }
+
+          /* Footer mobile improvements */
+          .footer-content {
+            grid-template-columns: 1fr;
+            gap: 40px;
+            text-align: center;
+          }
+
+          .footer-links {
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+
+          .footer-group nav {
+            align-items: center;
+          }
+
+          .footer-group a {
+            padding: 6px 0;
+            margin: 4px 0;
+          }
+
+          .footer-bottom {
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+          }
+
+          .footer-badges {
+            justify-content: center;
+            flex-wrap: wrap;
+          }
+
+          /* Social links mobile */
+          .social-links {
+            justify-content: center;
           }
         }
 

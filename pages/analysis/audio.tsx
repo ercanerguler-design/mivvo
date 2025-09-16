@@ -32,7 +32,7 @@ export default function AudioAnalysis(){
         setCredits(userCredits);
         
         if (userCredits <= 0) {
-          window.location.href = '/dashboard/credits?redirect=/analysis/audio';
+          window.location.href = '/dashboard/credits?redirect=' + encodeURIComponent('/analysis/audio');
           return;
         }
       } catch (error) {

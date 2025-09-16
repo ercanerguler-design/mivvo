@@ -29,7 +29,7 @@ export default function PaintAnalysis(){
         setCredits(userCredits);
         
         if (userCredits <= 0) {
-          window.location.href = '/dashboard/credits?redirect=/analysis/paint';
+          window.location.href = '/dashboard/credits?redirect=' + encodeURIComponent('/analysis/paint');
           return;
         }
       } catch (error) {

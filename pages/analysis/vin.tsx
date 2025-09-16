@@ -1,10 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import VINSearch from "@/components/VINSearch";
 import { VehicleInfo } from "@/types/vehicle";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function VinAnalysis() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [vehicleInfo, setVehicleInfo] = useState<VehicleInfo | null>(null);
   const [activeTab, setActiveTab] = useState('basic');
+  const [loading, setLoading] = useState(true);
+
+  // Üyelik kontrolü
+  useEffect(() => {
+    if (status === "loading") return;
+    
+    if (!session) {
+      router.push('/auth/login?callbackUrl=/analysis/vin');
+      return;
+    }
+    
+    setLoading(false);
+  }, [session, status, router]);
 
   const tabs = [
     { id: 'basic', label: 'Temel Bilgiler' },
@@ -15,6 +32,20 @@ export default function VinAnalysis() {
     { id: 'dimensions', label: 'Boyutlar' },
     { id: 'transmission', label: 'Şanzıman' }
   ];
+
+  if (loading) {
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <div className="bg-white shadow rounded-lg p-6">
+          <p>Kullanıcı kontrolü yapılıyor...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (!session) {
+    return null; // Router redirect zaten çalışıyor
+  }
 
   return (
     <main className="container mx-auto px-4 py-8">
