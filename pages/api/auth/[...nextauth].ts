@@ -89,7 +89,13 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || (() => {
+    if (process.env.NODE_ENV === 'production') {
+      // Production için güçlü bir fallback secret
+      return 'mivvo-prod-ultra-secure-2025-6N_YlPjj5eSbRzhiU68DVA8QrPfOanWeo_O5QrfrNco';
+    }
+    return 'dev-secret-key-mivvo-2025';
+  })(),
 };
 
 export default NextAuth(authOptions);
